@@ -21,7 +21,7 @@ public class Main {
 		int left = prisonCount%sweetsCount;
 
 		 for (int i = 0; i < prisons.length; i++) {
-			System.out.println(left);
+			System.out.println("heyo");
 		}
 		
 	}
