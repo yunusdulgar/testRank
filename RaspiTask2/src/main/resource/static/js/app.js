@@ -1,24 +1,20 @@
 var taskManagerModule = angular.module('taskManagerApp', [ 'ngAnimate' ]);
 
 taskManagerModule.controller("MyController", function($scope, $timeout) {
-	console.log("MyController");
 	$timeout(callAtTimeout, 5000);
 	$scope.showLive = false;
+	$scope.itemToggle = false;
 	$scope.showRealTime = function showRealTime() {
-		console.log("showRealTime");
-		console.log("showRealTime para : " + $scope.showLive);
 		$scope.showLive = !($scope.showLive);
 		window.location.reload(true);
-
 	};
 
 	function callAtTimeout() {
-		
-//		if ($scope.showLive) {
-//			window.location.reload($scope.showLive);
-//			console.log("Timeout occurred");
-//		}
-		
+
+		// if ($scope.showLive) {
+		// window.location.reload($scope.showLive);
+		// console.log("Timeout occurred");
+		// }
 	}
 });
 
@@ -29,7 +25,9 @@ taskManagerModule
 
 					var urlBase = "";
 					$scope.reloaded = true;
-					$scope.toggle = true;
+					$scope.taskToggle = true;
+					$scope.itemToggle = false;
+
 					$scope.selection = [];
 					$scope.days = [ {
 						id : 1,
@@ -60,6 +58,7 @@ taskManagerModule
 					$scope.finishTaskDate = new Date();
 					$scope.statuses = [ 'ACTIVE', 'COMPLETED' ];
 					$scope.priorities = [ 'RED', 'GREEN', 'OFF' ];
+					$scope.items = findAllItems();
 					$http.defaults.headers.post["Content-Type"] = "application/json";
 
 					function findAllTasks() {
@@ -86,7 +85,9 @@ taskManagerModule
 											$scope.taskPriority = "";
 											$scope.taskStatus = "";
 											$scope.taskDate = "";
-											$scope.toggle = '!toggle';
+											$scope.taskToggle = '!taskToggle';
+											$scope.itemToggle = false;
+
 										});
 					}
 
@@ -115,8 +116,19 @@ taskManagerModule
 											$scope.taskPriority = "";
 											$scope.taskStatus = "";
 											$scope.taskDate = "";
-											$scope.toggle = '!toggle';
+											$scope.taskToggle = '!taskToggle';
+											$scope.itemToggle = false;
+
 										});
+					}
+
+					function findAllItems() {
+						// get all items and display initially
+						$http.get(urlBase + '/items').success(function(data) {
+							if (data._embedded != undefined) {
+								$scope.items = data._embedded.items;
+							}
+						});
 					}
 
 					function cloneTask(taskName) {
@@ -131,8 +143,6 @@ taskManagerModule
 
 					// add a new task
 					$scope.addTask = function addTask() {
-						console.log("date " + $scope.startTaskDateString);
-						console.log("date " + $scope.finishTaskDateString);
 
 						if ($scope.taskName == "" || $scope.taskPriority == ""
 								|| $scope.taskStatus == "") {
@@ -164,8 +174,9 @@ taskManagerModule
 						}
 					};
 
-					// toggle selection for a given task by task id
-					$scope.toggleSelection = function toggleSelection(taskUri) {
+					// taskToggle selection for a given task by task id
+					$scope.taskToggleSelection = function taskToggleSelection(
+							taskUri) {
 						var idx = $scope.selection.indexOf(taskUri);
 
 						// is currently selected
@@ -217,11 +228,11 @@ taskManagerModule
 						console.log("getTasksByDay");
 						findTasksByDate();
 					};
-
+					
 					function timerComplete() {
 						console.log("allTasks");
 						window.location.reload(true);
-						if ($scope.toggle) {
+						if ($scope.taskToggle) {
 							window.location.reload(true);
 							$scope.allTasks;
 						}

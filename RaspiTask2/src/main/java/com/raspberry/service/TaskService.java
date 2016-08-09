@@ -1,4 +1,4 @@
-package com.raspberry.RaspiTask;
+package com.raspberry.service;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -8,6 +8,9 @@ import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.raspberry.model.Task;
+import com.raspberry.repo.TaskRepository;
 
 @Component
 public class TaskService {
@@ -30,6 +33,7 @@ public class TaskService {
 		LOGGER.error("DATE " + DateUtils.addDays(task.getTaskDate(),dayCount).toString());
 		newTask.setTaskDate(DateUtils.addDays(task.getTaskDate(),dayCount));
 		newTask.setTaskDay(DateUtils.addDays(task.getTaskDate(),dayCount).getDay());
+		newTask.setItemName(task.getItemName());
 		newTask.setTaskDescription(task.getTaskName() + " Başla: " + df.format(DateUtils.addDays(task.getTaskDate(), dayCount)));
 		LOGGER.error("createNewTask");
 		return taskRepository.save(newTask);
