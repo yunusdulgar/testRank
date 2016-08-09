@@ -1,4 +1,4 @@
-package com.raspberry.RaspiTask;
+package com.raspberry.model;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -10,54 +10,62 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.apache.log4j.Logger;
 
+import com.raspberry.controller.HomeController;
+
 @Entity
-@Table(name="task_list")
+@Table(name = "task_list")
 public class Task {
 
-	private static final Logger LOGGER=Logger.getLogger(HomeController.class);
-	
+	private static final Logger LOGGER = Logger.getLogger(HomeController.class);
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="task_id")
+	@Column(name = "task_id")
 	private int id;
-	
-	@Column(name="task_name")
+
+	@Column(name = "task_name")
 	private String taskName;
-	
-	@Column(name="task_description")
+
+	@Column(name = "task_description")
 	private String taskDescription;
-	
-	@Column(name="task_priority")
+
+	@Column(name = "task_priority")
 	private String taskPriority;
-	
-	@Column(name="task_status")
+
+	@Column(name = "task_status")
 	private String taskStatus;
-	
-	@Column(name="task_archived")
+
+	@Column(name = "task_archived")
 	private int taskArchived = 0;
-	
-	@Column(name="start_task_date")
+
+	@Column(name = "start_task_date")
 	private String startTaskDate;
 
-	@Column(name="finish_task_date")
+	@Column(name = "finish_task_date")
 	private String finishTaskDate;
-	
-	@Column(name="finish_task_date_string")
+
+	@Column(name = "finish_task_date_string")
 	private String finishTaskDateAsString;
-	
-	@Column(name="taskDate")
+
+	@Column(name = "taskDate")
 	private Date taskDate;
-	
-	@Column(name="taskDay")
+
+	@Column(name = "taskDay")
 	private int taskDay;
-	
-	@Column(name="dateType")
+
+	@Column(name = "dateType")
 	private String dateType;
-	
+
+	@Column(name = "taskItemName")
+	private String itemName;
+
 	public int getTaskDay() {
 		return taskDay;
 	}
@@ -87,7 +95,7 @@ public class Task {
 	}
 
 	public void setDateType(String dateType) {
-		
+
 		this.dateType = dateType;
 	}
 
@@ -139,14 +147,14 @@ public class Task {
 	public void setTaskArchived(int taskArchived) {
 		this.taskArchived = taskArchived;
 	}
-	
+
 	public String getStartTaskDate() {
 		return startTaskDate;
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public void setStartTaskDate(String startTaskDate) {
-		LOGGER.error("input setStartTaskDate : " +startTaskDate );
+		LOGGER.error("input setStartTaskDate : " + startTaskDate);
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date = null;
 		try {
@@ -154,25 +162,25 @@ public class Task {
 		} catch (ParseException e) {
 			LOGGER.error("ParseException");
 		}
-		
-		DateFormat df =new SimpleDateFormat("EEE, HH:mm:ss");
-		if (date==null) {
-			date=new Date();
+
+		DateFormat df = new SimpleDateFormat("EEE, HH:mm:ss");
+		if (date == null) {
+			date = new Date();
 			LOGGER.error("date==null");
 		}
 		setTaskDate(date);
 		setTaskDay(date.getDay());
-		setTaskDescription(getTaskName() + " Başla: " +df.format(date));
-		LOGGER.error("output setStartTaskDate : " +df.format(date));
+		setTaskDescription(getTaskName() + " Başla: " + df.format(date));
+		LOGGER.error("output setStartTaskDate : " + df.format(date));
 		this.startTaskDate = df.format(date);
 	}
-	
+
 	public String getFinishTaskDate() {
 		return finishTaskDate;
 	}
 
 	public void setFinishTaskDate(String finishTaskDate) {
-		LOGGER.error("input setfinishTaskDate : " +finishTaskDate );
+		LOGGER.error("input setfinishTaskDate : " + finishTaskDate);
 		setFinishTaskDateAsString(finishTaskDate);
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date = null;
@@ -181,22 +189,27 @@ public class Task {
 		} catch (ParseException e) {
 			LOGGER.error("ParseException");
 		}
-		DateFormat df =new SimpleDateFormat("EEE, HH:mm:ss");
-		if (date==null) {
-			date=new Date();
+		DateFormat df = new SimpleDateFormat("EEE, HH:mm:ss");
+		if (date == null) {
+			date = new Date();
 			LOGGER.error("date==null");
 		}
-		LOGGER.error("output setfinishTaskDate : " +df.format(date));
+		LOGGER.error("output setfinishTaskDate : " + df.format(date));
 		this.finishTaskDate = df.format(date);
 	}
 
-
 	@Override
 	public String toString() {
-		return "Task [id=" + id + ", taskName=" + taskName
-				+ ", taskDescription=" + taskDescription + ", taskPriority="
-				+ taskPriority + ",taskStatus=" + taskStatus + "]";
+		return "Task [id=" + id + ", taskName=" + taskName + ", taskDescription=" + taskDescription + ",taskStatus="
+				+ taskStatus + "]";
+	}
+	
+	public String getItemName() {
+		return itemName;
 	}
 
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
+	}
+	
 }
-
